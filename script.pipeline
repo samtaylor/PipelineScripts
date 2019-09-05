@@ -9,7 +9,10 @@ pipeline {
             steps {
                 script {
                     // Generate a version code for the app
-                    app_version_code = new Date().format('yyyyMMddHH')
+                    // app_version_code = new Date().format('yyyyMMddHH')
+                    def dateFormat = new SimpleDateFormat("yyyyMMddHH")
+                    def date = new Date()
+                    app_version_code = dateFormat.format(date)
                 }
             }
         }
