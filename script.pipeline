@@ -1,0 +1,24 @@
+import java.text.SimpleDateFormat
+
+def app_version_code
+
+pipeline {
+    agent any
+    stages {
+        stage("Test") {
+            steps {
+                script {
+                    // Generate a version code for the app
+                    app_version_code = new Date().format('yyyyMMddHH')
+                }
+            }
+        }
+        stage("Test 2") {
+            steps {
+                script {
+                    println("${app_version_code}")
+                }
+            }
+        }
+    }
+}
