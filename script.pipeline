@@ -1,9 +1,11 @@
 pipeline {
     agent any
-    parameters {
-        booleanParam(name: 'IS_RELEASE', defaultValue: false, description: 'Deploy to Google Play Beta')
-        booleanParam(name: 'IS_PR', defaultValue: false, description: 'Is a PR')
-    }
+    properties([
+        parameters([
+            booleanParam(defaultValue: true, description: '', name: 'IS_PR'), 
+            booleanParam(defaultValue: false, description: '', name: 'IS_RELEASE')
+        ])
+    ])
     stages {
         stage("Start Emulator") {
             when { expression { params.IS_RELEASE == false } }
