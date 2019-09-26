@@ -6,73 +6,73 @@ pipeline {
     }
     stages {
         stage("Start Emulator") {
-            when { param.IS_RELEASE == 'false' }
+            when { expression { param.IS_RELEASE == 'false' } }
             steps {
                 echo 'Start Emulator'
             }
         }
         stage("JVM Tests") {
-            when { param.IS_RELEASE == 'false' }
+            when { expression { param.IS_RELEASE == 'false' } }
             steps {
                 echo 'JVM Tests'
             }
         }
         stage("Connected Tests") {
-            when { param.IS_RELEASE == 'false' }     
+            when { expression { param.IS_RELEASE == 'false' } }
             steps {
                 echo 'Connected Tests'
             }
         }
         stage("Notify BitBucket") {
-            when { param.IS_PR == 'true' }
+            when { expression { param.IS_PR == 'true' } }
             steps {
                 echo 'Notify BitBucket'
             }
         }
         stage("Assemble APKs") {
-            when { param.IS_RELEASE == 'false' && param.IS_PR == 'false' }
+            when { expression { param.IS_RELEASE == 'false' && param.IS_PR == 'false' } }
             steps {
                 echo 'Assemble APKs'
             }
         }
         stage("Crashlytics Upload") {
-            when { param.IS_RELEASE == 'false' && param.IS_PR == 'false' }
+            when { expression { param.IS_RELEASE == 'false' && param.IS_PR == 'false' } }
             steps {
                 echo 'Crashlytics Upload'
             }
         }
         stage("Tag Build") {
-            when { param.IS_RELEASE == 'false' && param.IS_PR == 'false' }
+            when { expression { param.IS_RELEASE == 'false' && param.IS_PR == 'false' } }
             steps {
                 echo 'Tag Builds'
             }
         }
         stage("Upload to Artifactory") {
-            when { param.IS_RELEASE == 'false' && param.IS_PR == 'false' }
+            when { expression { param.IS_RELEASE == 'false' && param.IS_PR == 'false' } }
             steps {
                 echo 'Upload to Artifactory'
             }
         }
         stage("Select Release Tag") {
-            when { param.IS_RELEASE == 'true' }
+            when { expression { param.IS_RELEASE == 'true' } }
             steps {
                 echo 'Select Release Tag'
             }
         }
         stage("Get from Artifactory") {
-            when { param.IS_RELEASE == 'true' }
+            when { expression { param.IS_RELEASE == 'true' } }
             steps {
                 echo 'Get from Artifactory'
             }
         }
         stage("Upload to Google Play") {
-            when { param.IS_RELEASE == 'true' }
+            when { expression { param.IS_RELEASE == 'true' } }
             steps {
                 echo 'Upload to Google Play'
             }
         }
         stage("Tag Release Build") {
-            when { param.IS_RELEASE == 'true' }
+            when { expression { param.IS_RELEASE == 'true' } }
             steps {
                 echo 'Tag Release Build'
             }
