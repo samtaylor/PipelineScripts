@@ -1,10 +1,10 @@
 pipeline {
     agent any
     options {
-        parameters([
-            booleanParam(defaultValue: true, description: '', name: 'IS_PR'), 
+        parameters {
+            booleanParam(defaultValue: true, description: '', name: 'IS_PR')
             booleanParam(defaultValue: false, description: '', name: 'IS_RELEASE')
-        ])
+        }
     }
     stages {
         stage("Start Emulator") {
