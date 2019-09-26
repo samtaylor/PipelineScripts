@@ -6,76 +6,98 @@ pipeline {
     }
     stages {
         stage("Start Emulator") {
-            when { expression { params.IS_RELEASE == 'false' } }
+            whenShouldRunTests()
             steps {
                 echo 'Start Emulator'
             }
         }
         stage("JVM Tests") {
-            when { expression { params.IS_RELEASE == 'false' } }
+            whenShouldRunTests()
             steps {
                 echo 'JVM Tests'
             }
         }
         stage("Connected Tests") {
-            when { expression { params.IS_RELEASE == 'false' } }
+            whenShouldRunTests()
             steps {
                 echo 'Connected Tests'
             }
         }
         stage("Notify BitBucket") {
-            when { expression { params.IS_PR == 'true' } }
+            whenPR()
             steps {
                 echo 'Notify BitBucket'
             }
         }
         stage("Assemble APKs") {
-            when { expression { params.IS_RELEASE == 'false' && params.IS_PR == 'false' } }
+            whenShouldGenerateBinaries()
             steps {
                 echo 'Assemble APKs'
             }
         }
         stage("Crashlytics Upload") {
-            when { expression { params.IS_RELEASE == 'false' && params.IS_PR == 'false' } }
+            whenShouldGenerateBinaries()
             steps {
                 echo 'Crashlytics Upload'
             }
         }
         stage("Tag Build") {
-            when { expression { params.IS_RELEASE == 'false' && params.IS_PR == 'false' } }
+            whenShouldGenerateBinaries()
             steps {
                 echo 'Tag Builds'
             }
         }
         stage("Upload to Artifactory") {
-            when { expression { params.IS_RELEASE == 'false' && params.IS_PR == 'false' } }
+            whenShouldGenerateBinaries()
             steps {
                 echo 'Upload to Artifactory'
             }
         }
         stage("Select Release Tag") {
-            when { expression { params.IS_RELEASE == 'true' } }
+            whenRelease()
             steps {
                 echo 'Select Release Tag'
             }
         }
         stage("Get from Artifactory") {
-            when { expression { params.IS_RELEASE == 'true' } }
+            whenRelease()
             steps {
                 echo 'Get from Artifactory'
             }
         }
         stage("Upload to Google Play") {
-            when { expression { params.IS_RELEASE == 'true' } }
+            whenRelease()
             steps {
                 echo 'Upload to Google Play'
             }
         }
         stage("Tag Release Build") {
-            when { expression { param.IS_RELEASE == 'true' } }
+            whenRelease()
             steps {
                 echo 'Tag Release Build'
             }
         }
     }
+}
+
+def whenPR() {
+    when {
+        expression { params.is_PR == true }
+    }
+}
+
+def whenRelease() {
+    when {
+        expression { params.IS_RELEASE == true }
+    }
+}
+
+def whenShouldRunTests() {
+    when {
+        expression { params.IS_RELEASE == false }
+    }
+}
+
+def whenShouldGenerateBinaries() {
+    when { expression { params.IS_RELEASE == 'false' && params.IS_PR == 'false' } }
 }
