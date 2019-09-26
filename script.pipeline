@@ -5,23 +5,41 @@ def app_version_code
 pipeline {
     agent any
     stages {
-        stage("Test") {
-            steps {
-                script {
-                    // Generate a version code for the app
-                    // app_version_code = new Date().format('yyyyMMddHH')
-                    def dateFormat = new SimpleDateFormat("yyyyMMddHH")
-                    def date = new Date()
-                    app_version_code = dateFormat.format(date)
-                }
-            }
+        stage("1. Start Emulator") {
+            when { environment name: 'RELEASE', value: 'false' }
         }
-        stage("Test 2") {
-            steps {
-                script {
-                    println("${app_version_code}")
-                }
-            }
+        stage("2. JVM Tests") {
+            when { environment name: 'RELEASE', value: 'false' }
+        }
+        stage("3. Connected Tests") {
+            when { environment name: 'RELEASE', value: 'false' }
+        }
+        stage("4. Notify BitBucket") {
+            when { allOf { not { branch 'master' }; environment name: 'RELEASE', value: 'false' } }
+        }
+        stage("5. Assemble APKs") {
+            when { allOf { branch 'master' }; environment name: 'RELEASE', value: 'false' }
+        }
+        stage("6. Crashlytics Upload") {
+            when { allOf { branch 'master' }; environment name: 'RELEASE', value: 'false' }
+        }
+        stage("7. Tag Build") {
+            when { allOf { branch 'master' }; environment name: 'RELEASE', value: 'false' }
+        }
+        stage("8. Upload to Artifactory") {
+            when { allOf { branch 'master' }; environment name: 'RELEASE', value: 'false' }
+        }
+        stage("9. Select Release Tag") {
+            when { allOf { branch 'master'; environment name: 'RELEASE', value: 'true' } }
+        }
+        stage("10. Get from Artifactory") {
+            when { allOf { branch 'master'; environment name: 'RELEASE', value: 'true' } }
+        }
+        stage("11. Tag Release Build") {
+            when { allOf { branch 'master'; environment name: 'RELEASE', value: 'true' } }
+        }
+        stage("12. Upload to Google Play") {
+            when { allOf { branch 'master'; environment name: 'RELEASE', value: 'true' } }
         }
     }
 }
