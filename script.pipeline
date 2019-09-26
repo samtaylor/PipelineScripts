@@ -2,73 +2,73 @@ pipeline {
     agent any
     stages {
         stage("1. Start Emulator") {
-            when { environment name: 'RELEASE', value: 'false' }
+            when { not { branch 'release' } }
             steps {
                 echo 'Start Emulator'
             }
         }
         stage("2. JVM Tests") {
-            when { environment name: 'RELEASE', value: 'false' }
+            when { not { branch 'release' } }
             steps {
                 echo 'JVM Tests'
             }
         }
         stage("3. Connected Tests") {
-            when { environment name: 'RELEASE', value: 'false' }
+            when { not { branch 'release' } }        
             steps {
                 echo 'Connected Tests'
             }
         }
         stage("4. Notify BitBucket") {
-            when { allOf { not { branch 'master' }; environment name: 'RELEASE', value: 'false' } }
+            when { allOf { not { branch 'master' }, not { branch 'release' } } }
             steps {
                 echo 'Notify BitBucket'
             }
         }
         stage("5. Assemble APKs") {
-            when { allOf { branch 'master' }; environment name: 'RELEASE', value: 'false' }
+            when {  branch 'master' }
             steps {
                 echo 'Assemble APKs'
             }
         }
         stage("6. Crashlytics Upload") {
-            when { allOf { branch 'master' }; environment name: 'RELEASE', value: 'false' }
+            when { branch 'master' }
             steps {
                 echo 'Crashlytics Upload'
             }
         }
         stage("7. Tag Build") {
-            when { allOf { branch 'master' }; environment name: 'RELEASE', value: 'false' }
+            when { branch 'master' }
             steps {
                 echo 'Tag Builds'
             }
         }
         stage("8. Upload to Artifactory") {
-            when { allOf { branch 'master' }; environment name: 'RELEASE', value: 'false' }
+            when { branch 'master' }
             steps {
                 echo 'Upload to Artifactory'
             }
         }
         stage("9. Select Release Tag") {
-            when { allOf { branch 'master'; environment name: 'RELEASE', value: 'true' } }
+            when { branch 'release' }
             steps {
                 echo 'Select Release Tag'
             }
         }
         stage("10. Get from Artifactory") {
-            when { allOf { branch 'master'; environment name: 'RELEASE', value: 'true' } }
+            when { branch 'release' }
             steps {
                 echo 'Get from Artifactory'
             }
         }
         stage("11. Upload to Google Play") {
-            when { allOf { branch 'master'; environment name: 'RELEASE', value: 'true' } }
+            when { branch 'release' }
             steps {
                 echo 'Upload to Google Play'
             }
         }
         stage("12. Tag Release Build") {
-            when { allOf { branch 'master'; environment name: 'RELEASE', value: 'true' } }
+            when { branch 'release' }
             steps {
                 echo 'Tag Release Build'
             }
