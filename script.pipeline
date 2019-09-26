@@ -24,7 +24,7 @@ pipeline {
             }
         }
         stage("Notify BitBucket") {
-            when { expression { params.is_PR == true } }
+            when { expression { params.IS_PR == true } }
             steps {
                 echo 'Notify BitBucket'
             }
