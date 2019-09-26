@@ -1,74 +1,78 @@
 pipeline {
     agent any
+    parameters {
+        booleanParam(defaultValue: true, description: '', name: 'IS_PR')
+        booleanParam(defaultValue: false, description: '', name: 'IS_RELEASE')
+    }
     stages {
         stage("Start Emulator") {
-            when { not { branch 'release' } }
+            when { expression { params.IS_RELEASE == false } }
             steps {
                 echo 'Start Emulator'
             }
         }
         stage("JVM Tests") {
-            when { not { branch 'release' } }
+            when { expression { params.IS_RELEASE == false } }
             steps {
                 echo 'JVM Tests'
             }
         }
         stage("Connected Tests") {
-            when { not { branch 'release' } }        
+            when { expression { params.IS_RELEASE == false } }
             steps {
                 echo 'Connected Tests'
             }
         }
         stage("Notify BitBucket") {
-            when { allOf { not { branch 'master' }; not { branch 'release' } } }
+            when { expression { params.IS_PR == true } }
             steps {
                 echo 'Notify BitBucket'
             }
         }
         stage("Assemble APKs") {
-            when {  branch 'master' }
+            when { expression { params.IS_RELEASE == false && params.IS_PR == false } }
             steps {
                 echo 'Assemble APKs'
             }
         }
         stage("Crashlytics Upload") {
-            when { branch 'master' }
+            when { expression { params.IS_RELEASE == false && params.IS_PR == false } }
             steps {
                 echo 'Crashlytics Upload'
             }
         }
-        stage("Tag Build") {
-            when { branch 'master' }
-            steps {
-                echo 'Tag Builds'
-            }
-        }
         stage("Upload to Artifactory") {
-            when { branch 'master' }
+            when { expression { params.IS_RELEASE == false && params.IS_PR == false } }
             steps {
                 echo 'Upload to Artifactory'
             }
         }
+        stage("Tag Build") {
+            when { expression { params.IS_RELEASE == false && params.IS_PR == false } }
+            steps {
+                echo 'Tag Builds'
+            }
+        }
         stage("Select Release Tag") {
-            when { branch 'release' }
+            when { expression { params.IS_RELEASE == true } }
             steps {
                 echo 'Select Release Tag'
             }
         }
         stage("Get from Artifactory") {
-            when { branch 'release' }
+            when { expression { params.IS_RELEASE == true } }
             steps {
                 echo 'Get from Artifactory'
             }
         }
         stage("Upload to Google Play") {
-            when { branch 'release' }
+            when { expression { params.IS_RELEASE == true } }
             steps {
                 echo 'Upload to Google Play'
             }
         }
         stage("Tag Release Build") {
-            when { branch 'release' }
+            when { expression { params.IS_RELEASE == true } }
             steps {
                 echo 'Tag Release Build'
             }
