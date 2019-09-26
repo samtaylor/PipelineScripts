@@ -20,7 +20,7 @@ pipeline {
             }
         }
         stage("4. Notify BitBucket") {
-            when { allOf { not { branch 'master' }, not { branch 'release' } } }
+            when { allOf { not { branch 'master' }; not { branch 'release' } } }
             steps {
                 echo 'Notify BitBucket'
             }
