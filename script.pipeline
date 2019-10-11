@@ -1,4 +1,7 @@
 pipeline {
+    env {
+        VERSION_NUMBER = '1.13.0'
+    }
     agent any
     stages {
         stage("Start Emulator") {
@@ -18,31 +21,31 @@ pipeline {
         }
         stage("Assemble APKs") {
             steps {
-                echo 'Assemble APKs'
+                echo "Assemble APKs for ${env.VERSION_NUMBER}"
             }
         }
         stage("Artifactory Upload") {
             when { expression { isMaster() } }
             steps {
-                echo 'Upload to Artifactory'
+                echo "Upload ${env.VERSION_NUMBER} to Artifactory"
             }
         }
         stage("Crashlytics Upload") {
             when { expression { isDevelop() || isMaster() } }
             steps {
-                echo 'Crashlytics Upload'
+                echo "Crashlytics Upload of ${env.VERSION_NUMBER}"
             }
         }
         stage("Google Play Upload") {
             when { expression { isMaster() } }
             steps {
-                echo 'Upload to Google Play'
+                echo "Upload ${env.VERSION_NUMBER} to Google Play"
             }
         }
         stage("Tag Release in BitBucket") {
             when { expression { isMaster() } }
             steps {
-                echo 'Tag Release Build'
+                echo "Tag ${env.VERSION_NUMBER}.${env.BUILD_NUMBER}'
             }
         }
         stage("Notify BitBucket") {
