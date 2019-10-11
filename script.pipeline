@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        VERSION_NUMBER = '1.13.0'
+        VERSION_NUMBER = '1.14.0'
     }
     agent any
     stages {
@@ -21,31 +21,31 @@ pipeline {
         }
         stage("Assemble APKs") {
             steps {
-                echo "Assemble APKs for ${env.VERSION_NUMBER}"
+                echo "Assemble APKs for ${versionString()}"
             }
         }
         stage("Artifactory Upload") {
             when { expression { isMaster() } }
             steps {
-                echo "Upload ${env.VERSION_NUMBER} to Artifactory"
+                echo "Upload ${versionString()} to Artifactory"
             }
         }
         stage("Crashlytics Upload") {
             when { expression { isDevelop() || isMaster() } }
             steps {
-                echo "Crashlytics Upload of ${env.VERSION_NUMBER}"
+                echo "Crashlytics Upload of ${versionString()}"
             }
         }
         stage("Google Play Upload") {
             when { expression { isMaster() } }
             steps {
-                echo "Upload ${env.VERSION_NUMBER} to Google Play"
+                echo "Upload ${versionString()} to Google Play"
             }
         }
         stage("Tag Release in BitBucket") {
             when { expression { isMaster() } }
             steps {
-                echo "Tag ${env.VERSION_NUMBER}.${env.BUILD_NUMBER}"
+                echo "Tag ${versionString()}"
             }
         }
         stage("Notify BitBucket") {
@@ -67,4 +67,8 @@ def isMaster() {
 
 def isPR() {
     return !(isDevelop() || isMaster())
+}
+
+def versionString() {
+    return "${env.VERSION_NUMBER}.${env.BUILD_NUMBER}"
 }
