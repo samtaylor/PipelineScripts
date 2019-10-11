@@ -1,9 +1,9 @@
 pipeline {
-  def version = readProperties file:'version.properties'
   agent any
   stages {
     stage("Merge develop to master") {
       steps {
+        def version = readProperties file:'version.properties'
         echo 'git checkout master'
         echo 'git merge develop'
         echo "git commit -m \"Merging develop for release v${version.MAJOR}.${version.MINOR}.${version.MICRO}\""
