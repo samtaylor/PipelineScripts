@@ -55,13 +55,13 @@ pipeline {
 }
 
 def isDevelop() {
-    return env.GIT_BRANCH ==~ "develop"
+    return env.GIT_BRANCH == "develop"
 }
 
 def isMaster() {
-    return env.GIT_BRANCH ==~ "master"
+    return env.GIT_BRANCH == "master"
 }
 
 def isPR() {
-    return !(env.GIT_BRANCH ==~ "develop" || env.GIT_BRANCH ==~ "master")
+    return !(isDevelop() || isMaster())
 }
