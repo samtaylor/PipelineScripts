@@ -14,7 +14,7 @@ pipeline {
     stage("Update develop version number") {
       steps {
         echo 'git checkout develop'
-        echo "awk -F\"=\" 'BEGIN{OFS=FS} $1==\"MICRO\"{$2=$2+1}1' version.properties > version.properties"
+        echo "awk -F\"=\" 'BEGIN{OFS=FS} \$1==\"MICRO\"{\$2=\$2+1}1' version.properties > version.properties"
         echo 'git commit -m \"Incrementing version number\"'
         echo 'git push'
       }
