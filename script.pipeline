@@ -22,34 +22,46 @@ pipeline {
             }
         }
         stage("Artifactory Upload") {
-            when { expression { env.GIT_BRANCH == 'origin/master' } }
+            when { expression { isMaster() } }
             steps {
                 echo 'Upload to Artifactory'
             }
         }
         stage("Crashlytics Upload") {
-            when { expression { env.GIT_BRANCH == 'origin/develop' || env.GIT_BRANCH == 'origin/master' } }
+            when { expression { isDevelop() || isMaster() } }
             steps {
                 echo 'Crashlytics Upload'
             }
         }
         stage("Google Play Upload") {
-            when { expression { env.GIT_BRANCH == 'origin/master' } }
+            when { expression { isMaster() } }
             steps {
                 echo 'Upload to Google Play'
             }
         }
         stage("Tag Release in BitBucket") {
-            when { expression { env.GIT_BRANCH == 'origin/master' } }
+            when { expression { isMaster() } }
             steps {
                 echo 'Tag Release Build'
             }
         }
         stage("Notify BitBucket") {
-            when { expression { env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master' } }
+            when { expression { isPR() } }
             steps {
                 echo 'Notify BitBucket'
             }
         }        
     }
+}
+
+def isDevelop() {
+    return env.GIT_BRANCH == "origin/develop"
+}
+
+def isMaster() {
+    return env.GIT_BRANCH == "origin/master"
+}
+
+def isPR() {
+    return !(isDevelop() || isMaster())
 }
