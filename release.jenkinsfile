@@ -1,6 +1,5 @@
-def version = readProperties file:'version.properties'
-
 pipeline {
+  def version = readProperties file:'version.properties'
   agent any
   stages {
     stage("Merge develop to master") {
