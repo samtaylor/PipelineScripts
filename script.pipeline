@@ -45,7 +45,7 @@ pipeline {
         stage("Tag Release in BitBucket") {
             when { expression { isMaster() } }
             steps {
-                echo "Tag ${env.VERSION_NUMBER}.${env.BUILD_NUMBER}'
+                echo "Tag ${env.VERSION_NUMBER}.${env.BUILD_NUMBER}"
             }
         }
         stage("Notify BitBucket") {
