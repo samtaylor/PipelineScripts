@@ -1,2 +1,17 @@
 pipeline {
+  agent any
+  stages {
+    stage("Merge develop to master") {
+      steps {
+        sh '''
+        '''
+      }
+    }
+    stage("Update develop version number") {
+      steps {
+        sh '''
+        '''
+      }
+    }
+  }
 }
