@@ -1,0 +1,23 @@
+def version = readProperties file:'version.properties'
+
+pipeline {
+  agent any
+  stages {
+    stage("Merge develop to master") {
+      steps {
+        echo 'git checkout master'
+        echo 'git merge develop'
+        echo "git commit -m \"Merging develop for release v${version.MAJOR}.${version.MINOR}.${version.MICRO}\""
+        echo 'git push'
+      }
+    }
+    stage("Update develop version number") {
+      steps {
+        echo 'git checkout develop'
+        echo "awk -F\"=\" 'BEGIN{OFS=FS} $1==\"MICRO\"{$2=$2+1}1' version.properties > version.properties"
+        echo 'git commit -m \"Incrementing version number\"'
+        echo 'git push'
+      }
+    }
+  }
+}
