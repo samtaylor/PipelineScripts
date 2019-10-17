@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage("Start Emulator") {
             steps {
-                echo 'Start Emulator'
+                echo 'Start Emulator - changes'
             }
         }
         stage("JVM Tests") {
