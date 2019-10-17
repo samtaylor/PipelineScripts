@@ -1,0 +1,31 @@
+pipeline {
+  agent any
+  stages {
+    stage("Get version") {
+      steps {
+        script {
+          def version = readProperties file:'version.properties';
+          env['MAJOR'] = version['MAJOR'];
+          env['MINOR'] = version['MINOR'];
+          env['MICRO'] = version['MICRO'];
+        }
+      }
+    }
+    stage("Merge develop to master") {
+      steps {
+        echo 'git checkout master'
+        echo 'git merge develop'
+        echo "git commit -m \"Merging develop for release v${env.MAJOR}.${env.MINOR}.${env.MICRO}\""
+        echo 'git push'
+      }
+    }
+    stage("Update develop version number") {
+      steps {
+        echo 'git checkout develop'
+        echo "awk -F\"=\" 'BEGIN{OFS=FS} \$1==\"MICRO\"{\$2=\$2+1}1' version.properties > version.properties"
+        echo 'git commit -m \"Incrementing version number\"'
+        echo 'git push'
+      }
+    }
+  }
+}
